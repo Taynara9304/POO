@@ -1,9 +1,9 @@
 package aula01.edificacoes;
 
 public class Edificacao {
-    double areaTotal;
-    double areaConstruida;
-    int numeroAndares;
+    private double areaTotal;
+    private double areaConstruida;
+    private int numeroAndares;
     
     public Edificacao() {
         this.areaTotal = 0.0;

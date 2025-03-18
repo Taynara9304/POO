@@ -1,11 +1,19 @@
 package aula01.edificacoes;
 
-public class Predio {
-    int numeroDeElevadores;
-    int qtdApartamentos;
-    int qtdVagasGaragem;
+public class Predio extends Edificacao {
+    private int numeroDeElevadores;
+    private int qtdApartamentos;
+    private int qtdVagasGaragem;
 
-    public Predio(int numeroDeElevadores, int qtdApartamentos, int qtdVagasGaragem) {
+    public Predio() {
+        super();
+        this.numeroDeElevadores = 0;
+        this.qtdApartamentos = 0;
+        this.qtdVagasGaragem = 0;
+    }
+
+    public Predio(double areaTotal, double areaConstruida, int numeroAndares, int numeroDeElevadores, int qtdApartamentos, int qtdVagasGaragem) {
+        super(areaTotal, areaConstruida, numeroAndares);
         this.numeroDeElevadores = numeroDeElevadores;
         this.qtdApartamentos = qtdApartamentos;
         this.qtdVagasGaragem = qtdVagasGaragem;
