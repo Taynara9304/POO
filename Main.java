@@ -1,15 +1,20 @@
-import java.util.Scanner;
-
-import aula01.edificacoes.*;;
+import java.time.LocalDate;
 
 public class Main {
-    final static Scanner LER = new Scanner(System.in);
     public static void main(String[] args) {
-        Predio predio01 = new Predio(300000.00, 200000.00, 15, 3, 500, 1000);
-        Casa casa01 = new Casa(10000, 70000, 1, 8, 3, true);
+        NadadorModelo modelo = new NadadorModelo();
+  
+        NadadorView view = new NadadorView();
 
-        System.out.println("Quantidade de apartamentos:" + predio01.getQtdApartamentos());
-        System.out.println("Está mobilhada? " + (casa01.isEstaMobilhada() == true ? "Sim" : "Não"));
+        NadadorControlador controlador = new NadadorControlador(modelo, view);
+    
+        LocalDate dataNascimento = LocalDate.of(2000, 06, 03);
+
+        controlador.setNome("Agda");
+        controlador.setDataNascimento(dataNascimento);
+        controlador.setClasse("A");
+        controlador.setQtdVitorias(10);
+
+        controlador.updateView();
     }
 }
-
