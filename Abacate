@@ -1,0 +1,277 @@
+# Correções no Sistema de Gerenciamento de Livros MVC
+
+Vou corrigir os problemas principais nos arquivos fornecidos, mantendo a estrutura MVC e os conceitos de POO solicitados.
+
+## Principais Problemas Identificados
+
+1. **BookController.java**: Falta construtor e há erro de digitação em `setTitile`
+2. **Book.java**: Erro de digitação em `titile`, problema na inicialização do Publisher
+3. **Librarian.java**: Lista de livros não inicializada e método `listBooks` vazio
+4. **Publication.java**: Herança incorreta de Book
+5. **MVCPattemBook.java**: Controller não está sendo usado corretamente
+
+## Arquivos Corrigidos
+
+### 1. BookController.java
+
+```java
+package controller;
+
+import view.BookView;
+import modelo.Publisher;
+import modelo.Book;
+import modelo.BookCategory;
+
+public class BookController {
+    private Book model;
+    private BookView view;
+
+    // Adicionado construtor
+    public BookController(Book model, BookView view) {
+        this.model = model;
+        this.view = view;
+    }
+
+    // Corrigido setTitile para setTitle
+    public void setBookTitle(String title) {
+        model.setTitle(title);
+    }
+
+    public void setBookAuthor(String author) {
+        model.setAuthor(author);
+    }
+
+    public void setBookPages(Integer pages) {
+        model.setPages(pages);
+    }
+
+    public void addExtraPages(int extra) {
+        model.incrementPages(extra);
+    }
+
+    public void setBookCategory(BookCategory category) {
+        model.setCategory(category);
+    }
+
+    // Corrigido para usar o objeto Publisher corretamente
+    public void setBookPublisher(Publisher publisher) {
+        model.setPublisher(publisher);
+    }
+
+    public void updateView() {
+        view.printBookDetails(model);
+    }
+}
+```
+
+### 2. Book.java
+
+```java
+package modelo;
+
+import java.time.LocalDate;
+
+public class Book {
+    private String title; // Corrigido de "titile" para "title"
+    private String author;
+    private Integer pages;
+    private BookCategory category;
+    private LocalDate registrationDate;
+    private Publisher publisher;
+    
+    // Construtor corrigido
+    public Book(String title, String author, Integer pages, BookCategory category, 
+               LocalDate registrationDate, Publisher publisher) {
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.category = category;
+        this.registrationDate = registrationDate;
+        this.publisher = publisher;
+    }
+
+    // Corrigido getTitile para getTitle
+    public String getTitle() {
+        return title;
+    }
+    
+    // Corrigido setTitile para setTitle
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public Integer getPages() {
+        return pages;
+    }
+    public void setPages(Integer pages) {
+        this.pages = pages;
+    }
+    public BookCategory getCategory() {
+        return category;
+    }
+    public void setCategory(BookCategory category) {
+        this.category = category;
+    }
+    public LocalDate getRegistrationDate() {
+        return registrationDate;
+    }
+    public void setRegistrationDate(LocalDate registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+    public Publisher getPublisher() {
+        return publisher;
+    }
+    
+    // Corrigido para receber objeto Publisher completo
+    public void setPublisher(Publisher publisher) {
+        this.publisher = publisher;
+    }
+
+    public void incrementPages(int extra) {
+        this.pages += extra;
+    }
+}
+```
+
+### 3. Librarian.java
+
+```java
+package modelo;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Librarian {
+    private String name;
+    private List<Book> books;
+
+    // Inicializando a lista no construtor
+    public Librarian() {
+        this.books = new ArrayList<>();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void addBook(Book book) {
+        books.add(book);
+    }
+
+    // Implementado método listBooks
+    public void listBooks() {
+        System.out.println("\n=== Livros na Biblioteca (" + name + ") ===");
+        for (Book book : books) {
+            System.out.println("- " + book.getTitle() + " por " + book.getAuthor());
+        }
+    }
+}
+```
+
+### 4. Publication.java (opcional - remova se não for necessária)
+
+```java
+package modelo;
+
+public abstract class Publication {
+    private String title;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+}
+```
+
+### 5. MVCPattemBook.java
+
+```java
+import java.time.LocalDate;
+
+import controller.BookController;
+import modelo.Book;
+import modelo.BookCategory;
+import modelo.Librarian;
+import modelo.Publisher;
+import view.BookView;
+
+public class MVCPattemBook {
+    public static void main(String[] args) {
+        // Criando objetos necessários
+        LocalDate date1 = LocalDate.now();
+        Publisher publisher = new Publisher();
+        publisher.setName("Editora Adega");
+        publisher.setLocation("São Paulo");
+        
+        Book book1 = new Book("Dom Casmurro", "Machado de Assis", 300, 
+                            BookCategory.LITERATURE, date1, publisher);
+        
+        BookView view = new BookView();
+        BookController controller = new BookController(book1, view);
+        
+        // Exibindo livro inicial
+        System.out.println("=== Dados Iniciais do Livro ===");
+        controller.updateView();
+        
+        // Alterando dados do livro
+        controller.setBookTitle("Dom Casmurro - Edição Especial");
+        controller.addExtraPages(50);
+        
+        // Exibindo dados atualizados
+        System.out.println("\n=== Dados Atualizados do Livro ===");
+        controller.updateView();
+        
+        // Trabalhando com a biblioteca
+        Librarian library = new Librarian();
+        library.setName("Biblioteca Central");
+        library.addBook(book1);
+        
+        // Adicionando outro livro
+        Publisher publisher2 = new Publisher();
+        publisher2.setName("Editora Moderna");
+        publisher2.setLocation("Rio de Janeiro");
+        Book book2 = new Book("Memórias Póstumas de Brás Cubas", "Machado de Assis", 
+                             250, BookCategory.LITERATURE, LocalDate.now(), publisher2);
+        library.addBook(book2);
+        
+        // Listando todos os livros
+        library.listBooks();
+    }
+}
+```
+
+## Melhorias Implementadas
+
+1. **Correção de erros de digitação**: "titile" → "title" em todas as ocorrências
+2. **Inicialização correta de objetos**: Publisher agora é inicializado antes de ser usado
+3. **Uso adequado do MVC**: Controller agora recebe Model e View no construtor
+4. **Implementação completa dos métodos**: listBooks() agora mostra os livros
+5. **Melhoria na manipulação de datas**: Usando LocalDate corretamente
+6. **Tratamento de nulos**: View já possui tratamento, mas os objetos são todos inicializados
+
+Para usar o sistema corretamente, certifique-se de:
+
+1. Criar primeiro o Publisher
+2. Depois criar o Book com o Publisher
+3. Criar a View e o Controller com o Book
+4. Usar o Controller para fazer alterações
+
+O sistema agora está funcional e segue todos os princípios do MVC e POO solicitados na atividade.
