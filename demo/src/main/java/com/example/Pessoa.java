@@ -1,27 +1,44 @@
 package com.example;
 
+import java.util.List;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
 public class Pessoa {
-    @Id 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
     private String nome;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "documentoId", referencedColumnName = "id")
+    @JoinColumn(name = "documento_id", referencedColumnName = "id")
     private Documento documento;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "pessoa_id")
+    private List<Telefone> telefones;
+    
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "pessoa_projeto",
+        joinColumns = @JoinColumn(name = "pessoa_id"),
+        inverseJoinColumns = @JoinColumn(name = "projeto_id")
+    )
+    private List<Projeto> projetos;
+
     public Pessoa() {
-        
     }
 
     public Long getId() {
@@ -46,5 +63,21 @@ public class Pessoa {
 
     public void setDocumento(Documento documento) {
         this.documento = documento;
+    }
+
+    public List<Telefone> getTelefones() {
+        return telefones;
+    }
+
+    public void setTelefones(List<Telefone> telefones) {
+        this.telefones = telefones;
+    }
+
+    public List<Projeto> getProjetos() {
+        return projetos;
+    }
+
+    public void setProjetos(List<Projeto> projetos) {
+        this.projetos = projetos;
     }
 }
